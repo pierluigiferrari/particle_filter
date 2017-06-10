@@ -60,9 +60,9 @@ void ParticleFilter::prediction(double delta_t, double std_pos[], double velocit
   default_random_engine gen;
 
   // Extract the standard deviations for x, y, and theta
-  double std_x = std[0];
-  double std_y = std[1];
-  double std_theta = std[2];
+  double std_x = std_pos[0];
+  double std_y = std_pos[1];
+  double std_theta = std_pos[2];
 
   // Creates normal distributions for x, y and theta.
   normal_distribution<double> dist_x(0, std_x);
@@ -233,11 +233,11 @@ void ParticleFilter::resample() {
   std::vector<Particle> new_particles(num_particles);
 
   std::default_random_engine generator;
-  std::discrete_distribution<double> distribution(weights);
+  std::discrete_distribution<int> distribution(weights.begin(), weights.end());
 
   for (int i = 0; i < num_particles; i++) {
 
-    new_particles[i] = distribution(generator);
+    new_particles[i] = particles[distribution(generator)];
 
   }
 

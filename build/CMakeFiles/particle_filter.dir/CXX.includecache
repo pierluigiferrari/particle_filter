@@ -109,6 +109,8 @@ iterator
 -
 particle_filter.h
 /Users/pierluigiferrari/git/particle_filter/src/particle_filter.h
+helper_functions.h
+/Users/pierluigiferrari/git/particle_filter/src/helper_functions.h
 
 /Users/pierluigiferrari/git/particle_filter/src/particle_filter.h
 helper_functions.h
