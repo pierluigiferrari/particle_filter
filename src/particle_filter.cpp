@@ -152,26 +152,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
   for (int i = 0; i < particles.size(); i++) { // Loop over all particles
 
     /*****************************************************************************************
-     * 1: Transform the sensor measurements into global map coordinates from the perspective of this particle
-     *****************************************************************************************/
-
-    // Create a vector for the transformed observations for this particle
-    std::vector<LandmarkObs> transformed_observations = std::vector<LandmarkObs>(observations.size());
-
-    double cos_theta = cos(particles[i].theta);
-    double sin_theta = sin(particles[i].theta);
-
-    for (int j = 0; j < observations.size(); j++) { // Loop over all observations
-
-      // Transform vehicle coordinates of this observation into map coordinates from the perspective of this particle
-      transformed_observations[j].id = observations[j].id;
-      transformed_observations[j].x = observations[j].x * cos_theta - observations[j].y * sin_theta + particles[i].x;
-      transformed_observations[j].y = observations[j].x * sin_theta + observations[j].y * cos_theta + particles[i].y;
-
-    }
-
-    /*****************************************************************************************
-     * 2: Get all map landmarks within the sensor range
+     * 1: Get all map landmarks within the sensor range
      *****************************************************************************************/
 
     std::vector<LandmarkObs> lms_in_range;
@@ -189,34 +170,62 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
       }
     }
 
-    /*****************************************************************************************
-     * 3: Associate each observation with the nearest neighbor landmark on the map
-     *****************************************************************************************/
+    // If all landmarks are out of range, then the weight of this particle will be zero and we can skip to the next loop
+    if (lms_in_range.size() == 0) {
 
-    dataAssociation(lms_in_range, transformed_observations, particles[i]);
+      particles[i].weight = 0;
+      weights[i] = 0;
 
-    /*****************************************************************************************
-     * 4: Compute this particle's new weight
-     *****************************************************************************************/
+    } else {
 
-    double weight_i = 1;
+      /*****************************************************************************************
+       * 2: Transform the sensor measurements into global map coordinates from the perspective of this particle
+       *****************************************************************************************/
 
-    for (int j = 0; j < transformed_observations.size(); j++) { // Loop over all observations
+      // Create a vector for the transformed observations for this particle
+      std::vector<LandmarkObs> transformed_observations = std::vector<LandmarkObs>(observations.size());
 
-      double x = transformed_observations[j].x; // The x-coordinate of this observation
-      double y = transformed_observations[j].y; // The y-coordinate of this observation
-      double mu_x = particles[i].sense_x[j]; // The x-coordinate of the associated landmark
-      double mu_y = particles[i].sense_y[j]; // The y-coordinate of the associated landmark
-      double sigma_x = std_landmark[0]; // The measurement uncertainty in the x-coordinate
-      double sigma_y = std_landmark[1]; // The measurement uncertainty in the y-coordinate
+      double cos_theta = cos(particles[i].theta);
+      double sin_theta = sin(particles[i].theta);
 
-      weight_i *= gaussian_2d(x, y, mu_x, mu_y, sigma_x, sigma_y);
+      for (int j = 0; j < observations.size(); j++) { // Loop over all observations
+
+        // Transform vehicle coordinates of this observation into map coordinates from the perspective of this particle
+        transformed_observations[j].id = observations[j].id;
+        transformed_observations[j].x = observations[j].x * cos_theta - observations[j].y * sin_theta + particles[i].x;
+        transformed_observations[j].y = observations[j].x * sin_theta + observations[j].y * cos_theta + particles[i].y;
+
+      }
+
+      /*****************************************************************************************
+       * 3: Associate each observation with the nearest neighbor landmark on the map
+       *****************************************************************************************/
+
+      dataAssociation(lms_in_range, transformed_observations, particles[i]);
+
+      /*****************************************************************************************
+       * 4: Compute this particle's new weight
+       *****************************************************************************************/
+
+      double weight_i = 1;
+
+      for (int j = 0; j < transformed_observations.size(); j++) { // Loop over all observations
+
+        double x = transformed_observations[j].x; // The x-coordinate of this observation
+        double y = transformed_observations[j].y; // The y-coordinate of this observation
+        double mu_x = particles[i].sense_x[j]; // The x-coordinate of the associated landmark
+        double mu_y = particles[i].sense_y[j]; // The y-coordinate of the associated landmark
+        double sigma_x = std_landmark[0]; // The measurement uncertainty in the x-coordinate
+        double sigma_y = std_landmark[1]; // The measurement uncertainty in the y-coordinate
+
+        weight_i *= gaussian_2d(x, y, mu_x, mu_y, sigma_x, sigma_y);
+
+      }
+
+      particles[i].weight = weight_i;
+      weights[i] = weight_i;
 
     }
-
-    particles[i].weight = weight_i;
-    weights[i] = weight_i;
-
   }
 }
 
