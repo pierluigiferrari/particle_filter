@@ -28,7 +28,7 @@ For a general introduction to particle filters for localization, please refer to
     cd uWebSockets
     git checkout e94b6e1
     ```
-    Some function signatures have changed in v0.14.x. See [this PR](https://github.com/udacity/CarND-MPC-Project/pull/3) for more details.
+    Some function signatures have changed in v0.14.x.
 * The simulator which you can download from [here](https://github.com/udacity/self-driving-car-sim/releases).
 
 ## Basic Build Instructions
