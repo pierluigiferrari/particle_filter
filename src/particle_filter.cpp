@@ -1,8 +1,7 @@
 /*
  * particle_filter.cpp
  *
- *  Created on: Dec 12, 2016
- *      Author: Tiffany Huang
+ *      Author: Pierluigi Ferrari
  */
 
 #include <random>
@@ -125,7 +124,6 @@ void ParticleFilter::dataAssociation(std::vector<LandmarkObs> predicted, std::ve
 
     for (int j = 0; j < predicted.size(); j++) { // Loop over all landmarks in `predicted`
 
-      //double distance = sqrt(pow((observations[i].x - predicted[j].x), 2.0) + pow((observations[i].y - predicted[j].y), 2.0));
       double distance = dist(observations[i].x, observations[i].y, predicted[j].x, predicted[j].y);
 
       if (distance < min_distance) {
@@ -246,14 +244,13 @@ void ParticleFilter::resample() {
   particles = new_particles;
 }
 
-Particle ParticleFilter::SetAssociations(Particle particle, std::vector<int> associations, std::vector<double> sense_x, std::vector<double> sense_y)
-{
-	//particle: the particle to assign each listed association, and association's (x,y) world coordinates mapping to
+Particle ParticleFilter::SetAssociations(Particle particle, std::vector<int> associations, std::vector<double> sense_x, std::vector<double> sense_y) {
+	// particle: The particle to assign each listed association, and association's (x,y) world coordinates mapping to
 	// associations: The landmark id that goes along with each listed association
-	// sense_x: the associations x mapping already converted to world coordinates
-	// sense_y: the associations y mapping already converted to world coordinates
+	// sense_x: The associations x mapping already converted to world coordinates
+	// sense_y: The associations y mapping already converted to world coordinates
 
-	//Clear the previous associations
+	// Clear the previous associations
 	particle.associations.clear();
 	particle.sense_x.clear();
 	particle.sense_y.clear();
@@ -265,30 +262,29 @@ Particle ParticleFilter::SetAssociations(Particle particle, std::vector<int> ass
  	return particle;
 }
 
-string ParticleFilter::getAssociations(Particle best)
-{
+string ParticleFilter::getAssociations(Particle best) {
 	vector<int> v = best.associations;
 	stringstream ss;
     copy( v.begin(), v.end(), ostream_iterator<int>(ss, " "));
     string s = ss.str();
-    s = s.substr(0, s.length()-1);  // get rid of the trailing space
+    s = s.substr(0, s.length()-1);  // Get rid of the trailing space
     return s;
 }
-string ParticleFilter::getSenseX(Particle best)
-{
+
+string ParticleFilter::getSenseX(Particle best) {
 	vector<double> v = best.sense_x;
 	stringstream ss;
     copy( v.begin(), v.end(), ostream_iterator<float>(ss, " "));
     string s = ss.str();
-    s = s.substr(0, s.length()-1);  // get rid of the trailing space
+    s = s.substr(0, s.length()-1);  // Get rid of the trailing space
     return s;
 }
-string ParticleFilter::getSenseY(Particle best)
-{
+
+string ParticleFilter::getSenseY(Particle best) {
 	vector<double> v = best.sense_y;
 	stringstream ss;
     copy( v.begin(), v.end(), ostream_iterator<float>(ss, " "));
     string s = ss.str();
-    s = s.substr(0, s.length()-1);  // get rid of the trailing space
+    s = s.substr(0, s.length()-1);  // Get rid of the trailing space
     return s;
 }
