@@ -38,6 +38,8 @@ For a general introduction to particle filters for localization, please refer to
 3. Compile: `cmake .. && make`
 4. Run it: `./particle_filter`
 
+Once you run the executable, simply run the simulator app and select the particle filter simulation.
+
 ## Inputs to the Particle Filter
 You can find the inputs to the particle filter in the `data` directory.
 
