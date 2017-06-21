@@ -6,7 +6,7 @@
 
 using namespace std;
 
-// for convenience
+// For convenience
 using json = nlohmann::json;
 
 // Checks if the SocketIO event has JSON data.
@@ -67,7 +67,7 @@ int main()
 
           if (!pf.initialized()) {
 
-          	// Sense noisy position data from the simulator
+      // Sense noisy position data from the simulator
 			double sense_x = std::stod(j[1]["sense_x"].get<std::string>());
 			double sense_y = std::stod(j[1]["sense_y"].get<std::string>());
 			double sense_theta = std::stod(j[1]["sense_theta"].get<std::string>());
@@ -163,7 +163,7 @@ int main()
     }
     else
     {
-      // i guess this should be done more gracefully?
+      // I guess this should be done more gracefully?
       res->end(nullptr, 0);
     }
   });
@@ -189,90 +189,3 @@ int main()
   }
   h.run();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
